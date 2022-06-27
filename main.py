@@ -47,30 +47,6 @@ def main():
     plot_tree(rf.estimators_[0], feature_names=x.columns, class_names=['Adelie', 'Chinstrap', 'Gentoo'], filled=True)
     plt.show()
 
-    # Importing the module for LimeTabularExplainer
-    import lime.lime_tabular
-
-    # Instantiating the explainer object by passing in the training set, and the extracted features
-    explainer_lime = lime.lime_tabular.LimeTabularExplainer(x_train,
-                                                            feature_names=x,
-                                                            verbose=True, mode='classification')
-    # Index corresponding to the test vector
-    i = 10
-
-    # Number denoting the top features
-    k = 6
-
-    # Calling the explain_instance method by passing in the:
-    #    1) ith test vector
-    #    2) prediction function used by our prediction model('reg' in this case)
-    #    3) the top features which we want to see, denoted by k
-    exp_lime = explainer_lime.explain_instance(
-        x_test[i], rf.predict, num_features=k)
-
-    # Finally visualizing the explanations
-    exp_lime.show_in_notebook()
-
-
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     main()
