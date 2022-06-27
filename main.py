@@ -2,7 +2,7 @@ import seaborn as sns
 from matplotlib import pyplot as plt
 from sklearn.ensemble import RandomForestClassifier
 
-from utils import save_model
+from utils import save_model, save_x_train_and_x_test
 
 def main():
     #load penguin dataset from seaborn library
@@ -29,6 +29,8 @@ def main():
     from sklearn.model_selection import train_test_split
 
     x_train, x_test, y_train, y_test = train_test_split(x, y, train_size=0.7, random_state=42)
+    save_x_train_and_x_test(x_test, y_test, 'penguin')
+
     print(x_train.shape, x_test.shape)
 
     #make random forest classifier for penguin dataset
@@ -50,7 +52,7 @@ def main():
 
     save_model(rf, 'penguin_rf_model.pkl')
 
-# Press the green button in the gutter to run the script.
+
 if __name__ == '__main__':
     main()
     exit(0)
