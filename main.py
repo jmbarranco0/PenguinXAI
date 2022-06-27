@@ -1,7 +1,8 @@
 import seaborn as sns
-import pandas as pd
 from matplotlib import pyplot as plt
 from sklearn.ensemble import RandomForestClassifier
+
+from utils import save_model
 
 def main():
     #load penguin dataset from seaborn library
@@ -46,6 +47,8 @@ def main():
     plt.figure(figsize=(10, 5))
     plot_tree(rf.estimators_[0], feature_names=x.columns, class_names=['Adelie', 'Chinstrap', 'Gentoo'], filled=True)
     plt.show()
+
+    save_model(rf, 'penguin_rf_model.pkl')
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
