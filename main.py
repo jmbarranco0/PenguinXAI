@@ -1,8 +1,11 @@
 import seaborn as sns
+import shap
 from matplotlib import pyplot as plt
 from sklearn.ensemble import RandomForestClassifier
+from sklearn import metrics
 
 from utils import save_model, save_x_train_and_x_test
+
 
 def main():
     #load penguin dataset from seaborn library
@@ -38,12 +41,8 @@ def main():
     #fit the classifier to the data
     rf.fit(x_train, y_train)
 
-    #make predictions on the penguin dataset
-    #predictions = rf.predict(penguin_data.drop('species', axis=1))
-    #show random forest accuracy
-    print('Random Forest Accuracy:', rf.score(penguin_data.drop('species', axis=1), penguin_data['species']))
-    #check if random forest classifier is not overfitting
-    print('Random Forest Overfitting:', 1 - rf.score(penguin_data.drop('species', axis=1), penguin_data['species']))
+    rf_preds = rf.predict(x_test)
+    print('The accuracy of the Random Forests model is :\t', metrics.accuracy_score(rf_preds, y_test))
 
     from sklearn.tree import plot_tree
     plt.figure(figsize=(10, 5))
@@ -51,6 +50,21 @@ def main():
     plt.show()
 
     save_model(rf, 'penguin_rf_model.pkl')
+
+    shap.initjs()
+    explainer = shap.TreeExplainer(rf)
+
+    single_shap_value = explainer(x_test.sample(n=1))
+    shap.summary_plot(single_shap_value, feature_names=x_test.columns, plot_type='bar')
+    plt.show()
+
+    # Visualize all values
+    shap_values = explainer.shap_values(x_train)
+    shap.summary_plot(shap_values, x_train, feature_names=x_train.columns, plot_type='bar')
+    plt.show()
+
+    shap.force_plot(explainer.expected_value[0], shap_values[0:5, :], x_test.iloc[0:5, :], plot_cmap="DrDb",
+                    feature_names=x.columns)
 
 
 if __name__ == '__main__':
