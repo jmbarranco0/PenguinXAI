@@ -2,6 +2,11 @@ import pickle
 import pandas as pd
 
 
+def load_dataset_from_xlsx(filename):
+    df = pd.read_excel(filename)
+    return df
+
+
 def save_model(model, filename):
     with open("models/" + filename, 'wb') as f:
         pickle.dump(model, f)
