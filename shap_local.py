@@ -51,32 +51,23 @@ def main():
     print("Model error =", np.linalg.norm(y - model.predict(xgtree)))
     print(model.get_dump(with_stats=True)[0])
 
-    predictions = model.predict(xgtree, output_margin=True)
     explainer = shap.TreeExplainer(model)
     shap_values = explainer.shap_values(xgtree)
+
+    shap.summary_plot(shap_values, x_train, feature_names=x_train.columns, plot_type='bar')
 
     shap.summary_plot(shap_values, x)
 
     shap.dependence_plot("Area", shap_values, x)
 
-    shap.initjs()
     shap.dependence_plot("Aspect_Ration", shap_values, x)  # Aspect_Ratio is determining
 
     shap.dependence_plot("Solidity", shap_values, x)  # Height is determining
 
-    # Visualize all values
-    shap_values = explainer.shap_values(x_train)
-    shap.summary_plot(shap_values, x_train, feature_names=x_train.columns, plot_type='bar')
     plt.show()
 
     xgboost.plot_importance(model)
     plt.show()
-
-    shap_values_ind = shap.TreeExplainer(model).shap_values(x)
-    for name in x_train.columns:
-        shap.dependence_plot(name, shap_values_ind, x, display_features=X_display)
-
-    save_model(rf, 'pumpkin_rf_model.pkl')
 
 
 if __name__ == '__main__':
